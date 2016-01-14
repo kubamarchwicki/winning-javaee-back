@@ -1,7 +1,9 @@
 var express = require('express')
-var app = express()
 var path = require('path')
+var bodyParser = require('body-parser')
+var app = express()
 
+app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, 'app')));
 
 app.get('/*', function (req, res) {
@@ -9,28 +11,24 @@ app.get('/*', function (req, res) {
   res.setHeader('Content-Type', 'application/json');
   res.end(JSON.stringify(
       [
-          {"title":"First todo","order":1,"completed":false},
-          {"title":"Second todo - which is done","order":2,"completed":true},
-          {"title":"Not done todo","order":3,"completed":false}
+          {"id": 1, "title":"First todo","order":1,"completed":false},
+          {"id": 2, "title":"Second todo - which is done","order":2,"completed":true},
+          {"id": 3, "title":"Not done todo","order":3,"completed":false}
       ]
   ));
 })
 
-var post = function(req, res) {
+app.all('/*', function(req, res) {
     console.log(req.method + ' req: ' + req.protocol + '://' + req.get('host') + req.originalUrl)
-    var bodyStr = '';
-    req.on("data",function(chunk){
-        bodyStr += chunk.toString();
-    });
-    req.on("end",function(){
-        console.log("   request body ==> " + bodyStr);
-    });
+    console.log("  request body: " + JSON.stringify(req.body))
+    var echo = req.body
+    if (req.body.id === undefined) {      
+      echo.id = Math.floor(Math.random() * 100) + 1            
+    }        
+    res.send(echo)
     res.status(201)
     res.end()
-}
-
-app.post('/*', post);
-app.put('/*', post);
+});
 
 var server = app.listen(3000, function () {
   var host = server.address().address
