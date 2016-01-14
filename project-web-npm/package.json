@@ -1,0 +1,19 @@
+{
+  "name": "sample-web",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon ./app.js",
+    "install": "bower install"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4",
+    "nodemon": "^1"
+  },
+  "devDependencies": {
+    "bower": "^1"
+  }
+}
