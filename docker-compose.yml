@@ -1,0 +1,6 @@
+server:
+    image: wildfly
+    ports:
+      - "18080:8080"
+      - "19990:9990"
+
