@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>pl.marchwicki</groupId>
@@ -11,7 +12,66 @@
 
     <groupId>pl.marchwicki.javaee</groupId>
     <artifactId>project-server</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <name>Winning JavaEE back: server</name>
 
+    <properties>
+        <failOnMissingWebXml>false</failOnMissingWebXml>
+    </properties>
+
+    <dependencyManagement>
+        <!-- ?? -->
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>7.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- profiles - webjars (default) / npm -->
+    <profiles>
+        <profile>
+            <id>frontend-webjars</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>pl.marchwicki.javaee</groupId>
+                    <artifactId>project-web</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>frontend-npm</id>
+            <dependencies>
+                <dependency>
+                    <groupId>pl.marchwicki.javaee</groupId>
+                    <artifactId>project-web-npm</artifactId>
+                    <version>1.0-SNAPSHOT</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>1.0.2.Final</version>
+                <configuration>
+                    <hostname>localhost</hostname>
+                    <port>19990</port>
+                    <username>admin</username>
+                    <password>Admin#70365</password>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
