@@ -1,6 +1,17 @@
-server:
-    image: wildfly
+wildfly:
+    image: wildfly-mysql
     ports:
       - "18080:8080"
       - "19990:9990"
-
+    links:
+      - mysql
+    environment:
+      - MYSQL_URI=mysql:3306
+mysql:
+    image: tutum/mysql
+    ports: 
+      - "13306:3306"
+    environment:
+      - MYSQL_USER=admin
+      - MYSQL_PASS=admin
+      - ON_CREATE_DB=test
