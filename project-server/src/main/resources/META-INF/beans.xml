@@ -3,5 +3,8 @@
        bean-discovery-mode="all" version="1.1"
        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/beans_1_1.xsd">
 
+    <alternatives>
+        <class>com.example.javaee.todos.stores.deltaspike.DeltaSpikeStore</class>
+    </alternatives>
 
 </beans>

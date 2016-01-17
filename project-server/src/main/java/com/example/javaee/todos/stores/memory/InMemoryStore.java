@@ -1,4 +1,4 @@
-package com.example.javaee.todos.stores;
+package com.example.javaee.todos.stores.memory;
 
 
 import com.example.javaee.todos.Store;

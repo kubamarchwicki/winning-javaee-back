@@ -1,4 +1,4 @@
-package com.example.javaee.todos.stores;
+package com.example.javaee.todos.stores.jpa;
 
 import com.example.javaee.todos.Store;
 import com.example.javaee.todos.Todo;
@@ -32,7 +32,7 @@ public class DatabaseStore implements Store {
 
     @Override
     public List<Todo> getAll() {
-        return em.createNamedQuery(Todo.FIND_ALL).getResultList();
+        return em.createQuery("select t from Todo t").getResultList();
     }
 
     @Override
