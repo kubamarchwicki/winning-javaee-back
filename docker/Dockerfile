@@ -2,8 +2,8 @@ FROM jboss/wildfly
 
 #Add users
 RUN /opt/jboss/wildfly/bin/add-user.sh admin Admin#70365 --silent
-RUN /opt/jboss/wildfly/bin/add-user.sh readuser password -a --silent
-RUN /opt/jboss/wildfly/bin/add-user.sh writeuser password1 -a --silent
+RUN /opt/jboss/wildfly/bin/add-user.sh readuser password -a -g app --silent
+RUN /opt/jboss/wildfly/bin/add-user.sh writeuser password1 -a -g app --silent
 
 #Add MySQL Driver
 ADD add_modules.sh /tmp
