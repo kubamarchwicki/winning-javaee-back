@@ -1,4 +1,4 @@
-package com.example.javaee.todos.audit.user;
+package com.example.javaee.todos.audit.access;
 
 import com.example.javaee.todos.audit.CorrelationId;
 

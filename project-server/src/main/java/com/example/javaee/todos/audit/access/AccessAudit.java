@@ -1,5 +1,6 @@
-package com.example.javaee.todos.audit.user;
+package com.example.javaee.todos.audit.access;
 
+import com.example.javaee.todos.audit.LogPersistor;
 import com.example.javaee.todos.audit.CorrelationId;
 
 import javax.annotation.Resource;
@@ -16,7 +17,7 @@ import java.util.Optional;
 public class AccessAudit {
 
     @Inject
-    AccessLogPersistor persistor;
+    LogPersistor persistor;
 
     @Resource
     SessionContext sessionContext;

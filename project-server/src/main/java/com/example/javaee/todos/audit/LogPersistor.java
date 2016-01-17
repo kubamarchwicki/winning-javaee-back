@@ -1,4 +1,4 @@
-package com.example.javaee.todos.audit.user;
+package com.example.javaee.todos.audit;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
@@ -6,14 +6,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Stateless
-public class AccessLogPersistor {
+public class LogPersistor {
 
     @PersistenceContext
     EntityManager em;
 
     @Asynchronous
-    public void save(AccessLog log) {
-        em.persist(log);
+    public void save(Object o) {
+        em.persist(o);
     }
 
 }

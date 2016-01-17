@@ -2,7 +2,8 @@ package com.example.javaee.todos;
 
 
 import com.example.javaee.todos.audit.*;
-import com.example.javaee.todos.audit.user.AccessAudit;
+import com.example.javaee.todos.audit.access.AccessAudit;
+import com.example.javaee.todos.audit.events.EventsLogging;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 @Stateless
-@Interceptors({CorrelationInterceptor.class, AccessAudit.class})
+@Interceptors({CorrelationInterceptor.class, AccessAudit.class, EventsLogging.class})
 @RolesAllowed("app")
 public class TodoResource {
 
@@ -26,27 +27,25 @@ public class TodoResource {
     private Store store;
 
     @GET
-    @Interceptors(ReadEventLogging.class)
     public List<Todo> getAll() {
         return store.getAll();
     }
 
     @POST
-    @Interceptors(WriteEventLogging.class)
+//    @Interceptors(DataModificationAudit.class)
     public Todo create(@Valid Todo todo) {
         return store.create(todo);
     }
 
     @PUT
     @Path("/{id}")
-    @Interceptors(WriteEventLogging.class)
+//    @Interceptors(DataModificationAudit.class)
     public Optional<Todo> update(@PathParam("id") long id, @Valid Todo todo){
         return store.save(id, todo);
     }
 
     @DELETE
     @Path("/{id}")
-    @Interceptors(DeleteEventLogging.class)
     public Response delete(@PathParam("id") long id){
         if (store.remove(id)) {
             return Response.noContent().build();
