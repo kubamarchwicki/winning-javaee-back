@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources>
+    <datasource jndi-name="java:jboss/datasources/ExampleMySQLDS" pool-name="ExampleMySQLDS">
+        <connection-url>jdbc:mysql://mysql:3306/test</connection-url>
+        <driver>mysql</driver>
+        <pool>
+            <min-pool-size>10</min-pool-size>
+            <max-pool-size>20</max-pool-size>
+            <prefill>true</prefill>
+        </pool>
+        <security>
+            <user-name>admin</user-name>
+            <password>admin</password>
+        </security>
+        <statement>
+            <prepared-statement-cache-size>100</prepared-statement-cache-size>
+            <share-prepared-statements>true</share-prepared-statements>
+        </statement>
+    </datasource>
+</datasources>

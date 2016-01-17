@@ -1,17 +1,30 @@
 package com.example.javaee.todos;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Entity
+@Table(name = "todos")
+@NamedQueries({
+        @NamedQuery(name = Todo.FIND_ALL, query = "select t from Todo t")
+})
 public class Todo {
 
+    final public static String FIND_ALL = "Todo.findAll";
+
+    @Id @GeneratedValue
+    @Column(name = "todo_id")
     private long id;
 
     @NotNull @Size(min = 1)
+    @Column(name = "todo_title")
     private String title;
 
+    @Column(name = "todo_order")
     private long order;
 
+    @Column(name = "todo_completed")
     private boolean completed;
 
     public Todo() {}

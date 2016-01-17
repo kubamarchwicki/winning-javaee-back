@@ -1,8 +1,12 @@
-package com.example.javaee.todos;
+package com.example.javaee.todos.stores;
 
+
+import com.example.javaee.todos.Store;
+import com.example.javaee.todos.Todo;
 
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.enterprise.inject.Alternative;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Singleton
 @Startup
+@Alternative
 public class InMemoryStore implements Store {
 
     private final AtomicLong idGenerator = new AtomicLong(1);
