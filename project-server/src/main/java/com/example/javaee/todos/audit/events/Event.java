@@ -1,20 +1,20 @@
 package com.example.javaee.todos.audit.events;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "event_log")
 @Inheritance
 @DiscriminatorColumn(name="event_type")
+@Embeddable
 public abstract class Event {
 
     @Id
     @GeneratedValue
     private long id;
-    private long timing;
-    private String uuid;
-    private Date date;
+
+    @Embedded
+    private EventData data;
 
     public long getId() {
         return id;
@@ -24,27 +24,11 @@ public abstract class Event {
         this.id = id;
     }
 
-    public long getTiming() {
-        return timing;
+    public EventData getData() {
+        return data;
     }
 
-    public void setTiming(long metrics) {
-        this.timing = metrics;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
+    public void setData(EventData data) {
+        this.data = data;
     }
 }

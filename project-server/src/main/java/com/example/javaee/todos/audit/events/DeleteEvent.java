@@ -13,9 +13,7 @@ public class DeleteEvent extends Event {
     public DeleteEvent() {}
 
     public DeleteEvent(CorrelationId id, Date date, long metrics) {
-        setUuid(id.getUuid());
-        setDate(date);
-        setTiming(metrics);
+        setData(new EventData(id.getUuid(), date, metrics));
     }
 
 }

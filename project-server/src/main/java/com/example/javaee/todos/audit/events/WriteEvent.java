@@ -13,9 +13,7 @@ public class WriteEvent extends Event {
     public WriteEvent() {}
 
     public WriteEvent(CorrelationId id, Date date, long metrics) {
-        setUuid(id.getUuid());
-        setDate(date);
-        setTiming(metrics);
+        setData(new EventData(id.getUuid(), date, metrics));
     }
 
 }

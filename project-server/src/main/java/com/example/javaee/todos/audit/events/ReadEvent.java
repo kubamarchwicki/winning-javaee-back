@@ -12,8 +12,6 @@ public class ReadEvent extends Event {
     public ReadEvent() {}
 
     public ReadEvent(CorrelationId id, Date date, long time) {
-        setUuid(id.getUuid());
-        setDate(date);
-        setTiming(time);
+        setData(new EventData(id.getUuid(), date, time));
     }
 }
