@@ -4,6 +4,7 @@ package com.example.javaee.todos;
 import com.example.javaee.todos.audit.*;
 import com.example.javaee.todos.audit.access.AccessAudit;
 import com.example.javaee.todos.audit.events.EventsLogging;
+import com.example.javaee.todos.audit.write.DataModificationLogging;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
@@ -32,14 +33,14 @@ public class TodoResource {
     }
 
     @POST
-//    @Interceptors(DataModificationAudit.class)
+    @Interceptors(DataModificationLogging.class)
     public Todo create(@Valid Todo todo) {
         return store.create(todo);
     }
 
     @PUT
     @Path("/{id}")
-//    @Interceptors(DataModificationAudit.class)
+    @Interceptors(DataModificationLogging.class)
     public Optional<Todo> update(@PathParam("id") long id, @Valid Todo todo){
         return store.save(id, todo);
     }

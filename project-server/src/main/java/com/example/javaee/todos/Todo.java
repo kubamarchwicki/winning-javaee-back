@@ -1,5 +1,7 @@
 package com.example.javaee.todos;
 
+import org.hibernate.envers.Audited;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -12,6 +14,7 @@ public class Todo {
     @Column(name = "todo_id")
     private long id;
 
+    @Audited
     @NotNull @Size(min = 1)
     @Column(name = "todo_title")
     private String title;
@@ -19,6 +22,7 @@ public class Todo {
     @Column(name = "todo_order")
     private long order;
 
+    @Audited
     @Column(name = "todo_completed")
     private boolean completed;
 

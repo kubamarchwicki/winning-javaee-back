@@ -5,9 +5,13 @@
     <persistence-unit name="todos" transaction-type="JTA">
         <jta-data-source>java:jboss/datasources/ExampleMySQLDS</jta-data-source>
         <properties>
-            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.hbm2ddl.auto" value="create-drop" />
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
             <property name="hibernate.show_sql" value="true" />
+
+            <property name="org.hibernate.envers.audit_table_suffix" value="_change_log" />
+            <property name=" org.hibernate.envers.revision_field_name " value="revision" />
+            <property name="org.hibernate.envers.revision_type_field_name" value="modification_type" />
         </properties>
     </persistence-unit>
 </persistence>
