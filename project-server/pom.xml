@@ -17,6 +17,7 @@
 
     <properties>
         <deltaspike.version>1.5.2</deltaspike.version>
+        <jdbi.version>2.71</jdbi.version>
         <failOnMissingWebXml>false</failOnMissingWebXml>
     </properties>
 
@@ -40,6 +41,11 @@
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-data-module-impl</artifactId>
             <version>${deltaspike.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdbi</groupId>
+            <artifactId>jdbi</artifactId>
+            <version>${jdbi.version}</version>
         </dependency>
 
         <dependency>
