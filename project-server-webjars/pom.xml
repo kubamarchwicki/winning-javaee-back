@@ -11,9 +11,9 @@
     </parent>
 
     <groupId>pl.marchwicki.javaee</groupId>
-    <artifactId>project-server</artifactId>
+    <artifactId>project-server-webjars</artifactId>
     <packaging>war</packaging>
-    <name>Winning JavaEE back: server</name>
+    <name>Winning JavaEE back: server-webjars</name>
 
     <dependencies>
         <dependency>

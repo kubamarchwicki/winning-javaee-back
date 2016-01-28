@@ -13,6 +13,7 @@
     <groupId>pl.marchwicki.javaee</groupId>
     <artifactId>project-server-jar</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>Winning JavaEE back: server-jar</name>
 
     <properties>
         <deltaspike.version>1.5.2</deltaspike.version>

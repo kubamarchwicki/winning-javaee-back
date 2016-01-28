@@ -32,7 +32,7 @@
 
     <modules>
         <module>project-server-jar</module>
-        <module>project-server</module>
+        <module>project-server-webjars</module>
         <module>project-web</module>
         <module>project-web-npm</module>
     </modules>
