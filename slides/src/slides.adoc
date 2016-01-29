@@ -466,88 +466,6 @@ public class Client {
 [quote, Apache DeltaSpike documentation]
 In case of some versions of Weld (or OpenWebBeans in BDA mode), you have to configure it as a global alternative instead of an `alternative` in `beans.xml`.
 
-== Not so really REST standard
-
-[%notitle]
-=== Not so really REST standard
-
-[source, java]
--------------------------------------------------------------------------------
-@XmlRootElement
-public class Todo {
-  public long id;
-  public String title;
-
-  //.. getters and setters ommitted for brevity
-}
--------------------------------------------------------------------------------
-
-[%notitle]
-=== Not so really REST standard
-
-[source, java]
--------------------------------------------------------------------------------
-@Path("/todos")
-@Produces(MediaType.APPLICATION_JSON)
-public class TodoResource {
-  
-  @Inject Store<Todo> store;
-
-  @GET
-  @Path("/{id}")
-  public Todo get(@PathParam("id") long id) {
-    return store.getById(id);
-  }
-
-  //... some other method
-}
--------------------------------------------------------------------------------
-
-[NOTE.speaker]
---
-* Now quiz - what would be the output
---
-
-[%notitle]
-=== Not so really REST standard
-
-
-[source, json]
--------------------------------------------------------------------------------
-GET /todos/1 HTTP/1.1
-Host: localhost
-
-HTTP/1.1 200 OK
-{
-
-    "id": 1,
-    "title": "First todo",
-    "order": 1,
-    "completed": false
-
-}
--------------------------------------------------------------------------------
-
-[%notitle]
-=== Not so really REST standard
-
-
-[source, json]
--------------------------------------------------------------------------------
-GET /todos/1 HTTP/1.1
-Host: localhost
-
-HTTP/1.1 200 OK
-{
-  todo: {
-    "id": 1,
-    "title": "First todo",
-    "order": 1,
-    "completed": false
-  }
-}
--------------------------------------------------------------------------------
-
 == What can we do about it?
 
 * This is a popular rant
@@ -583,6 +501,8 @@ HTTP/1.1 200 OK
 * And that way our JavaEE is becoming like Spring - not being Spring
 * So we don't have much advantage from "following the standard"
 ** But we loose a lot in terms of the Spring *fanciness* and *flexibility*
+
+*Just accept it and move forward*
 --
 
 
@@ -769,6 +689,80 @@ public interface UserRepository extends JpaRepository<User, Long> { //<2>
 --
 * For Spring Data named queries comes by convention - through method name
 --
+
+== Persistence without JPA
+
+[source, sql]
+-------------------------------------------------------------------------------
+select event_type, 
+  date_format(`date`, '%Y-%m-%d %H:%i') AS formatted_date, 
+  avg(timing) as avg_duration, 
+  group_concat(DISTINCT el.uuid) as uuids, 
+  group_concat(DISTINCT wl.todo_id ORDER BY todo_id ASC) as todo_ids, 
+  count(1) as count 
+from event_log el
+  LEFT JOIN write_log wl ON el.uuid = wl.uuid 
+  GROUP BY event_type, minute(date) 
+  ORDER BY formatted_date asc 
+-------------------------------------------------------------------------------
+
+[NOTE.speaker]
+--
+* if we got more complitated query - were JPA just gives up
+* joins, groups, specific SQL functions
+** we have JPA NativeQuery 
+** or use something totally different
+--
+
+[%notitle]
+=== JDBI configuration
+
+[source, java]
+-------------------------------------------------------------------------------
+@ApplicationScoped
+public class JDBIConfiguration {
+
+    @Resource
+    DataSource dataSource;
+
+    @Produces
+    public EventsPerMinuteDao createEventPerMinuteDao() {
+        DBI dbi = new DBI(dataSource);
+        return dbi.onDemand(EventsPerMinuteDao.class);
+    }
+
+    public void dispose(@Disposes EventsPerMinuteDao dao) {
+        dao.close();
+    }
+}
+-------------------------------------------------------------------------------
+
+[%notitle]
+=== JDBI Dao
+
+
+[source, java]
+-------------------------------------------------------------------------------
+public interface EventsPerMinuteDao {
+
+    @SqlQuery("select event_type, " +
+            "  date_format(`date`, '%Y-%m-%d %H:%i') AS formatted_date, " +
+            "  avg(timing) as avg_duration, " +
+            "  group_concat(DISTINCT el.uuid) as uuids, " +
+            "  group_concat(DISTINCT wl.todo_id ORDER BY todo_id ASC) as todo_ids, " +
+            "  count(1) as count " +
+            "from event_log el" +
+            "  LEFT JOIN write_log wl ON el.uuid = wl.uuid " +
+            "  GROUP BY event_type, minute(date) " +
+            "  ORDER BY formatted_date asc ")
+    @Mapper(EventsPerMinuteMapper.class)
+    List<EventsPerMinute> listEventsPerMinute();
+
+    void close();
+}
+-------------------------------------------------------------------------------
+
+
 
 [[section_4-web]]
 == Why win JavaEE back?
@@ -984,7 +978,7 @@ http://speakerdeck.com/kubamarchwicki/winning-javavee-back
 Follow me on twitter
   @kubem
 
-What a free ebook from Packt - visit @dailyfreeebook
+Want a free ebook from Packt - visit @dailyfreeebook
 
 This presentation was made with AsciiDoc
 Presentation source and examples
