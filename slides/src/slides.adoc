@@ -1,7 +1,7 @@
-= Winning JavaEE Back
+= JavaEE - nie tak smutna jak się wydaje
 Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
 :idprefix: slide_
-:title-slide-background-image: voxxed-days-berlin-template.png
+:title-slide-background-image: 4dev-background.png
 :title-slide-background-size: cover
 :icons: font
 :imagesdir: images
@@ -15,31 +15,32 @@ Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
 :revealjs_height: 720
 :source-highlighter: coderay
 
-== Why win JavaEE back?
+[%notitle, data-background-image=images/4dev.jpg, data-background-size=contain]
+== Słowo na niedziele
 
-[%step]
-* Why this talk?
-* Won't standard save us by itself?
-* Persistence beyond JPA
-* Web without JSF
+
+== Does JavaEE have to suck?
+
+[.left]
+icon:square-o[] Why this talk?
+
+[.left]
+icon:square-o[] 5 tips to make your JavaEE live better
 
 [NOTE.speaker]
 --
 * These are things to cover
 * Why this talk?
 ** Why did I eve though about going beyond JavaEE while still staying with JavaEE
-* Won't standard save us by itself?
-** Because good talk won't work without a rant
-* Persistence beyond JPA
-** Deltaspike: Be more like Spring, like Spring-data
-** jDBI, JOOQ: Be more like glue layer, not very opinionaned
-* Web without JSF
 --
 
 
-[#aboutme%notitle]
+[#aboutme, data-background-image=images/chlopaki.jpg, data-background-size=cover]
 == Who am I?
 
+image::chlopaki.jpg[height=580]
+
+////
 image::no-logo.png[width=190, role="logo"]
 image::logo-bns.png[width=190, role="logo"]
 image::logo-symentis.png[width=190, role="logo"]
@@ -61,6 +62,7 @@ image::logo-symentis.png[width=190, role="logo"]
 ** They were good enough in context
 ** I'm happy to discuss it and ritually dissent them
 ....
+////
 
 [NOTE.speaker]
 --
@@ -70,12 +72,13 @@ image::logo-symentis.png[width=190, role="logo"]
 --
 
 [[section_1-intro]]
-== Why win JavaEE back?
+== Does JavaEE have to suck?
 
-* *Why this talk?*
-* Won't standard save us by itself?
-* Persistence beyond JPA
-* Web without JSF
+[.left]
+icon:square-o[] *Why this talk?*
+
+[.left]
+icon:square-o[] 5 tips to make your JavaEE live better
 
 == We've chosen JavaEE to build our start-up!
 
@@ -111,14 +114,14 @@ image::logo-symentis.png[width=190, role="logo"]
 All projects need to be structured same way
 
 [source, xml]
--------------------------------------------------------------------------------
+----
 <modules>
-  <module>customer-data-service-wsdls</module> <!--1-->  
+  <module>customer-data-service-wsdls</module> <!--1-->
   <module>customer-data-service-services</module> <!--2-->
   <module>customer-data-service-web</module> <!--3-->
   <module>customer-data-service-client</module> <!--4-->
 </modules>
--------------------------------------------------------------------------------
+----
 <1> Just the WSDL file
 <2> This contains everything (entities, services)
 <3> A single `@WebService`
@@ -138,25 +141,25 @@ All projects need to be structured same way
 === What am I doing?
 
 [source, java]
--------------------------------------------------------------------------------
-/**Thread for SOAPConnection */ 
+----
+/**Thread for SOAPConnection */
 SOAPConnectionThread soapConnectionThread = new SOAPConnectionThread();
 soapConnectionThread.start();
--------------------------------------------------------------------------------
+----
 
 [source, java]
--------------------------------------------------------------------------------
+----
 try {
   soapConnectionThread.join( soapJoinTime );
 } catch ( InterruptedException ie ) {
   errorLog = errorLog + "soapConnectionThread InterruptedException: " +
-    ie.getMessage() + 
+    ie.getMessage() +
     conversion.getExceptionTrace(ie,StaticVariables.getStackTraceLength()) + "; ";
 } catch ( Exception e ) {
-  errorLog = errorLog + "soapConnectionThread Exception: " + e.getMessage() + 
+  errorLog = errorLog + "soapConnectionThread Exception: " + e.getMessage() +
     conversion.getExceptionTrace(e,StaticVariables.getStackTraceLength()) + "; ";
 }
--------------------------------------------------------------------------------
+----
 
 [NOTE.speaker]
 --
@@ -167,27 +170,27 @@ try {
 === What am I doing? #2
 
 [source, java]
--------------------------------------------------------------------------------
-if (successfulSOAP) { 
+----
+if (successfulSOAP) {
   soapMsg = soapConnectionThread.getSOAPMessage();
-  if (soapMsg.indexOf("<faultcode>") == -1 
-    && soapMsg.indexOf("</faultcode>") == -1 
-    && soapMsg.indexOf("<faultcode/>") == -1 
-    && soapMsg.indexOf("<faultstring>") == -1 
-    && soapMsg.indexOf("</faultstring>") == -1 
+  if (soapMsg.indexOf("<faultcode>") == -1
+    && soapMsg.indexOf("</faultcode>") == -1
+    && soapMsg.indexOf("<faultcode/>") == -1
+    && soapMsg.indexOf("<faultstring>") == -1
+    && soapMsg.indexOf("</faultstring>") == -1
     && soapMsg.indexOf("<faultstring/>") == -1) {
     //...some business logic
   } else {
-    errorLog = errorLog + 
+    errorLog = errorLog +
       "Exception in call to ProdRefreshWS or connection timeout (timeout=" +
-       StaticVariables.getConnectionTimeout() + 
+       StaticVariables.getConnectionTimeout() +
        "ms; targetURL=" + targetURL + ")" + "; ";
-    extCallDuration =  extCallDuration + ":prodRefWS_except:" + 
+    extCallDuration =  extCallDuration + ":prodRefWS_except:" +
       String.valueOf(soapEndTime.getTime() - soapStartTime.getTime());
     soapConnectionThread.stop();
   }
-}    
--------------------------------------------------------------------------------
+}
+----
 
 [NOTE.speaker]
 --
@@ -217,11 +220,11 @@ if (successfulSOAP) {
 * So the team jumps new bandwagon - which they didn't get either
 --
 
-== Let's rebuild it in Spring!
+=== Let's rebuild it in Spring!
 
 And now we have two problems
 
-== This is a real life stack
+=== This is a real life stack
 
 [%step]
 * WebLogic 12c
@@ -230,35 +233,64 @@ And now we have two problems
 
 [NOTE.speaker]
 --
-* It was 2015! Spring 4 was announced December 2013. 
+* It was 2015! Spring 4 was announced December 2013.
 ** I bet it was mature enough
 * Weblogic, which the team don't understand
 * Spring on the top of that - which the team didn't get either
 ** But it looked good on Linked In!
 --
 
-[%notitle]
+[%notitle, data-background-image=images/car-carrying-too-much.png, data-background-size=cover]
 === I have a picture for that
 
-image::car-carrying-too-much.png[]
+//image::car-carrying-too-much.png[]
 
 [NOTE.speaker]
 --
 *We need to win JavaEE back cause it's not that bad afterall*
 --
 
-[[section_2-rant]]
-== Why win JavaEE back?
+[[section_2-tips]]
+== Does JavaEE have to suck?
 
-* Why this talk?
-* *Won't standard save us by itself?*
-* Persistence beyond JPA
+[.left]
+icon:check-square-o[] Why this talk?
+
+[.left]
+icon:square-o[] *5 tips to make your JavaEE live better*
+
+[%step]
+* Know your stack
+* The Standard won't save you _(aka Your Vendor is your framework)_
+* Limit the boiler plate
+* Go beyond The Standard (not only JPA)
+* Don't be limited to server-side MVC
+
+[NOTE.speaker]
+--
+* New weblogic with apache attic dependencies
+* Won't standard save us by itself?
+* Because good talk won't work without a rant
+* Deltaspike: Be more like Spring, like Spring-data
+* jDBI, JOOQ: Be more like glue layer, not very opinionaned
 * Web without JSF
+--
 
-== ... better over the years?
+== 1 of 5 tips
+
+&num;1 *Know your stack*
+
+== ... better over the years
+
+[quote, EJB Spec - 21.2.2. Programming restrictions]
+____
+The enterprise bean must not attempt to manage threads. The enterprise bean must not attempt to start, stop, suspend, or resume a thread, or to change a thread’s priority or name. The enterprise bean must not attempt to manage thread groups.
+____
+
+== ... better over the years
 
 [source, java]
--------------------------------------------------------------------------------
+----
 @Singleton
 public class JobProcessor {
 
@@ -272,25 +304,26 @@ public class JobProcessor {
       return new AsyncResult<String>(jobName);
   }
 }
--------------------------------------------------------------------------------
+----
 
-== ... better over the years?
+== ... better over the years
 
 [source, java]
--------------------------------------------------------------------------------
+----
 @Stateless
 public class MyBean {
+
     @Resource
     ManagedExecutorService managedExecutorService; //<2>
- 
+
     public void executeAsync() throws ExecutionException, InterruptedException {
         for(int i=0; i<10; i++) {
             MyTask myTask = myTaskInstance.get();
             managedExecutorService.submit(myTask);
         }
     }
-} 
--------------------------------------------------------------------------------
+}
+----
 
 
 [NOTE.speaker]
@@ -298,29 +331,29 @@ public class MyBean {
 * JMS for internal communication became obsolete and antipattern
 --
 
-== ... better over the years?
+== ... better over the years
 
 [source, java]
--------------------------------------------------------------------------------
+----
 import javax.inject.Inject;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
-@Named("MyPrinter") //<3>
+@Named //<3>
 @RequestScoped //<4>
 public class Printer {
 
     @Inject @Informal Greeting greeting; //<5>
-    
+
     //...
 }
--------------------------------------------------------------------------------
+----
 
-== ... better over the years?
+== ... better over the years
 
 [source, java]
--------------------------------------------------------------------------------
-@Stateless
+----
+@Named
 public class HelloMessenger {
 
     @Inject Event<HelloEvent> events; //<6>
@@ -329,37 +362,42 @@ public class HelloMessenger {
         events.fire(new HelloEvent("from bean " + System.currentTimeMillis()));
     }
 }
--------------------------------------------------------------------------------
+----
 
 [source, java]
--------------------------------------------------------------------------------
-@Stateless
+----
+@Named
 public class HelloListener {
     public void listenToHello(@Observes HelloEvent helloEvent) { //<7>
         System.out.println("HelloEvent: " + helloEvent);
     }
 }
--------------------------------------------------------------------------------
+----
 
-== But it's still not Spring
+== It's kind of OK
 
+.But it's still not *Spring*
 * Database is like opinion, everyone's different
 ** JDBCTemplate (lightweight persistence)
 ** Spring-data (everything by convention)
 * Spring-whatever-framework-I'd-like-to-integrate
 ** JSP / JSF and beyond
 
-== After all it's a standard 
+== 2 of 5 tips
+
+&num;2 *Your Vendor is your framework*
+
+== But it's all about The Standard
 
 [source, xml]
--------------------------------------------------------------------------------
+----
 <dependency>
   <groupId>javax</groupId>
   <artifactId>javaee-api</artifactId>
   <version>7.0</version>
   <scope>provided</scope>
 </dependency>
--------------------------------------------------------------------------------
+----
 
 [NOTE.speaker]
 --
@@ -370,7 +408,7 @@ public class HelloListener {
 [%notitle]
 == Spring vs JavaEE
 
-Spring:: Single vendor; not standardized - but changes and differences are manageable 
+Spring:: Single vendor; not standardized - but changes and differences are manageable
 JavaEE:: Multiple Vendors; interpretation subject to change
 
 == Not so really injection standard
@@ -379,55 +417,55 @@ JavaEE:: Multiple Vendors; interpretation subject to change
 === Not so really injection standard
 
 [source, java]
--------------------------------------------------------------------------------
+----
 public interface Service {
   public String hello();
 }
--------------------------------------------------------------------------------
+----
 
 
 [source, java]
--------------------------------------------------------------------------------
+----
 @Stateless
 public class MyService implements Service {
   public String hello() {
     return "Hello world!"
   }
 }
--------------------------------------------------------------------------------
+----
 
 
 [source, java]
--------------------------------------------------------------------------------
+----
 @Stateless
 public class MyOtherService implements Service {
   public String hello() {
     return "Hello Voxxed!"
   }
 }
--------------------------------------------------------------------------------
+----
 
 [%notitle]
 === Not so really injection standard
 
 [source, java]
--------------------------------------------------------------------------------
+----
 @Startup
 @Singleton
 public class Client {
 
-  @EJB Service service;
+  @EJB Service service; //<1>
 
   @PostConstruct
   public void init() {
     System.out.println(service.hello());
   }
 }
--------------------------------------------------------------------------------
+----
 
 [NOTE.speaker]
 --
-* So what's get printed? 
+* So what's get printed?
 * It depends
 ** OpenEJB - takes the last deployed
 ** JBoss / Wildfly family - throws error
@@ -438,19 +476,19 @@ public class Client {
 
 
 [source, java]
--------------------------------------------------------------------------------
+----
 @Startup
 @Singleton
 public class Client {
 
-  @Inject Service service;
+  @Inject Service service; //<2>
 
   @PostConstruct
   public void init() {
     System.out.println(service.hello());
   }
 }
--------------------------------------------------------------------------------
+----
 
 [NOTE.speaker]
 --
@@ -464,40 +502,41 @@ public class Client {
 === Not so really injection standard
 
 [quote, Apache DeltaSpike documentation]
-In case of some versions of Weld (or OpenWebBeans in BDA mode), you have to configure it as a global alternative instead of an `alternative` in `beans.xml`.
+In case of some versions of Weld (or OpenWebBeans), you have to configure it as a global alternative instead of an `alternative` in `beans.xml`.
 
-== What can we do about it?
-
-* This is a popular rant
-** But no one really care
-* We just usually glue ourselves to a single application server
-** And treat it as a single vendor
+[NOTE.speaker]
+--
+So we have a standard but still we are not there yet
+--
 
 == After all it's a standard
 
 [source, xml]
--------------------------------------------------------------------------------
+----
 <dependency>
     <groupId>org.apache.tomee</groupId>
     <artifactId>javaee-api</artifactId>
     <version>7.0</version>
     <scope>provided</scope>
 </dependency>
--------------------------------------------------------------------------------
-
+----
 
 [source, xml]
--------------------------------------------------------------------------------
+----
 <dependency>
     <groupId>org.jboss.spec</groupId>
     <artifactId>jboss-javaee-7.0</artifactId>
-    <version>1.0.0.Final</version> 
+    <version>1.0.0.Final</version>
     <scope>provided</scope>
 </dependency>
--------------------------------------------------------------------------------
+----
 
 [NOTE.speaker]
 --
+* This is a popular rant
+** But no one really care
+* We just usually glue ourselves to a single application server
+** And treat it as a single vendor
 * And that way our JavaEE is becoming like Spring - not being Spring
 * So we don't have much advantage from "following the standard"
 ** But we loose a lot in terms of the Spring *fanciness* and *flexibility*
@@ -505,120 +544,19 @@ In case of some versions of Weld (or OpenWebBeans in BDA mode), you have to conf
 *Just accept it and move forward*
 --
 
+== 3 of 5 tips
 
-[[section_3-jpa]]
-== Why win JavaEE back?
+&num;3 *Limit the boiler plate*
 
-* Why this talk?
-* Won't standard save us by itself?
-* *Persistence beyond JPA*
-* Web without JSF
+== Meet Apache DeltaSpike
 
-== CDI 
-
-* Introduced as a part of JavaEE 6 (JSR-299)
-* Prescribes:
-** *Contexts* - bindable lifecycle of components 
-** *Dependency injection* - typesafe injection of components 
-
-[NOTE.speaker]
---
-* Essential part of this element is CDI 
-* It was an enabler of what we will be talking later on
---
-
-== CDI Producer methods
-
-*Producer method* generates an object that can then be injected
-
-[%notitle]
-=== CDI Producer methods
-
-When concrete type of the object to be injected may vary at runtime
-
-[source, java]
--------------------------------------------------------------------------------
-@Produces
-public Coder getCoder() {
-
-    switch (coderType) {
-        case TEST:
-            return new TestCoder();
-        case SHIFT:
-            return new DefaultCoder();
-        default:
-            return null;
-    }
-}
--------------------------------------------------------------------------------
-
-[%notitle]
-=== CDI Producer methods
-
-When object requires some custom initialization 
-
-
-[source, java]
--------------------------------------------------------------------------------
-@ApplicationScoped
-public class EntityManagerProducer {
-
-    @PersistenceUnit
-    private EntityManagerFactory entityManagerFactory;
-
-    @Produces
-    public EntityManager create() { //<1>
-        return this.entityManagerFactory.createEntityManager();
-    }
-
-    public void dispose(@Disposes EntityManager entityManager) {
-        if (entityManager.isOpen()) {
-            entityManager.close();
-        }
-    }
-}
--------------------------------------------------------------------------------
-<1> Cannot be performed by the bean constructor 
-
-[%notitle]
-=== CDI Producer methods
-
-When needed to inject an object that is not itself a bean
-
-
-[source, java]
--------------------------------------------------------------------------------
-@ApplicationScoped
-public class JooqDslContextProducer {
-
-    @Resource
-    DataSource dataSource;
-
-    @Produces
-    @Default
-    public DSLContext jooq() {
-        return DSL.using(dataSource, SQLDialect.MYSQL);
-    }
-}
--------------------------------------------------------------------------------
-
-
-[NOTE.speaker]
---
-* This is the feature we will be using
-* This allows us to easily integrate 3rd party libraries our application
-* As well as building JavaEE dedicated libraries aiming the complexity - like DeltaSpike
---
-
-== What is DeltaSpike?
-
-* A set of CDI extensions 
+* A set of CDI extensions
 * Working on a number of CDI implementations and application servers
 ** From *Tomcat* / *TomEE*, through *JBoss* / *Wildfly* to *Weblogic*
 * Adds some JavaEE flavour to context containers
-** Transactions 
+** Transactions
 ** Servlet injection
-* Adds some of the JavaEE missing parts 
+* Adds some of the JavaEE missing parts
 ** Context aware Bean Validation
 ** Easier scheduling (with Quartz)
 
@@ -631,7 +569,7 @@ public class JooqDslContextProducer {
 == DeltaSpike Data
 
 * Like Spring Data but without Spring
-* Reduces JPA boilerplate to bare minimum 
+* Reduces JPA boilerplate to bare minimum
 ** Provides implementation of repository pattern for simple queries
 ** 'Clutter methods' like _save_, _findAll_, _findBy_
 * Provides conventions for repository methods `findByNameLikeAndAgeBetweenAndGender`
@@ -649,11 +587,11 @@ public class JooqDslContextProducer {
 == DeltaSpike Data vs Spring Data
 
 [source, java]
--------------------------------------------------------------------------------
+----
 import org.apache.deltaspike.data.api.EntityRepository;
 
 @Repository
-public interface PersonRepository extends EntityRepository<Person, Long> { 
+public interface PersonRepository extends EntityRepository<Person, Long> {
     List<Person> findByAgeBetweenAndGender(int minAge, int maxAge, Gender gender);
 
     @Query("select p from Person p where p.ssn = ?1")
@@ -661,19 +599,19 @@ public interface PersonRepository extends EntityRepository<Person, Long> {
     @Query(named=Person.BY_FULL_NAME)
     Person findByFullName(String firstName, String lastName);
 }
--------------------------------------------------------------------------------
+----
 
 [source, java]
--------------------------------------------------------------------------------
+----
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> { //<2>
+public interface UserRepository extends JpaRepository<User, Long> {
   List<User> findByLastname(String lastname);
 
   @Query("select u from User u where u.emailAddress = ?1")
   User findByEmailAddress(String emailAddress);
 }
--------------------------------------------------------------------------------
+----
 
 == Problems?
 
@@ -681,8 +619,8 @@ public interface UserRepository extends JpaRepository<User, Long> { //<2>
 
 * Start with just implementing `EntityRepository` +
   if you need a repository layer at all
-* Declare simple queries with query derivation mechanism (parsing) + 
-  or manual queries 
+* Declare simple queries with query derivation mechanism (parsing) +
+  or manual queries
 * For more complex queries, add your own query methods to repository
 
 [NOTE.speaker]
@@ -690,35 +628,112 @@ public interface UserRepository extends JpaRepository<User, Long> { //<2>
 * For Spring Data named queries comes by convention - through method name
 --
 
+== CDI Producer methods
+
+*Producer method* generates an object that can then be injected
+
+* Introduced as a part of JavaEE 6 (JSR-299)
+* Prescribes:
+** *Contexts* - bindable lifecycle of components
+** *Dependency injection* - typesafe injection of components
+
+[NOTE.speaker]
+--
+* Essential part of this element is CDI
+* It was an enabler of what we will be talking later on
+--
+
+[%notitle]
+=== CDI Producer methods
+
+When concrete type of the object to be injected may vary at runtime
+
+[source, java]
+----
+@Produces
+public Coder getCoder() {
+
+    switch (coderType) {
+        case TEST:
+            return new TestCoder();
+        case SHIFT:
+            return new DefaultCoder();
+        default:
+            throw new CoderNotAvailableException();
+    }
+}
+----
+
+
+[source, java]
+----
+@Inject Coder coder;
+----
+
+
+
+[%notitle]
+=== CDI Producer methods
+
+When object requires some custom initialization
+
+[source, java]
+----
+@ApplicationScoped
+public class EntityManagerProducer {
+
+    @PersistenceUnit
+    private EntityManagerFactory entityManagerFactory;
+
+    @Produces
+    public EntityManager create() { //<1>
+        return this.entityManagerFactory.createEntityManager();
+    }
+
+    public void dispose(@Disposes EntityManager entityManager) {
+        if (entityManager.isOpen()) {
+            entityManager.close();
+        }
+    }
+}
+----
+<1> Cannot be performed by the bean constructor
+
+== 4 of 5 tips
+
+&num;4 *Go beyond The Standard (not only JPA)*
+
 == Persistence without JPA
 
 [source, sql]
--------------------------------------------------------------------------------
-select event_type, 
-  date_format(`date`, '%Y-%m-%d %H:%i') AS formatted_date, 
-  avg(timing) as avg_duration, 
-  group_concat(DISTINCT el.uuid) as uuids, 
-  group_concat(DISTINCT wl.todo_id ORDER BY todo_id ASC) as todo_ids, 
-  count(1) as count 
+----
+select event_type,
+  date_format(`date`, '%Y-%m-%d %H:%i') AS formatted_date,
+  avg(timing) as avg_duration,
+  group_concat(DISTINCT el.uuid) as uuids,
+  group_concat(DISTINCT wl.todo_id ORDER BY todo_id ASC) as todo_ids,
+  count(1) as count
 from event_log el
-  LEFT JOIN write_log wl ON el.uuid = wl.uuid 
-  GROUP BY event_type, minute(date) 
-  ORDER BY formatted_date asc 
--------------------------------------------------------------------------------
+  LEFT JOIN write_log wl ON el.uuid = wl.uuid
+  GROUP BY event_type, minute(date)
+  ORDER BY formatted_date asc
+----
 
 [NOTE.speaker]
 --
 * if we got more complitated query - were JPA just gives up
 * joins, groups, specific SQL functions
-** we have JPA NativeQuery 
+** we have JPA NativeQuery
 ** or use something totally different
 --
 
 [%notitle]
-=== JDBI configuration
+== JDBI configuration
+
+When needed to inject an object that is not a bean
 
 [source, java]
--------------------------------------------------------------------------------
+----
 @ApplicationScoped
 public class JDBIConfiguration {
 
@@ -735,14 +750,14 @@ public class JDBIConfiguration {
         dao.close();
     }
 }
--------------------------------------------------------------------------------
+----
 
 [%notitle]
 === JDBI Dao
 
 
 [source, java]
--------------------------------------------------------------------------------
+----
 public interface EventsPerMinuteDao {
 
     @SqlQuery("select event_type, " +
@@ -760,19 +775,48 @@ public interface EventsPerMinuteDao {
 
     void close();
 }
--------------------------------------------------------------------------------
+----
+
+
+[source, java]
+----
+@Inject EventsPerMinuteDao eventsDao;
+----
 
 
 
-[[section_4-web]]
-== Why win JavaEE back?
+[%notitle]
+== JOOQ configuration
 
-* Why this talk?
-* Won't standard save us by itself?
-* Persistence beyond JPA
-* *Web without JSF*
+[source, java]
+----
+@ApplicationScoped
+public class JooqDslContextProducer {
 
-== Web development anti-patterns
+    @Resource
+    DataSource dataSource;
+
+    @Produces
+    @Default
+    public DSLContext jooq() {
+        return DSL.using(dataSource, SQLDialect.MYSQL);
+    }
+}
+----
+
+
+[NOTE.speaker]
+--
+* This is the feature we will be using
+* This allows us to easily integrate 3rd party libraries our application
+* As well as building JavaEE dedicated libraries aiming the complexity - like DeltaSpike
+--
+
+== 5 of 5 tips
+
+&num;5 *Don’t be limited to server-side MVC*
+
+== Web development &num;1 anti-pattern
 
 *Never let backend engineers develop frontend UI*
 
@@ -780,7 +824,7 @@ public interface EventsPerMinuteDao {
 --
 * There is one
 * Especially if that's something to be seen by customer, business
-* JSP / JSF environment wasn't natural for neither web developers nor backend engineers. 
+* JSP / JSF environment wasn't natural for neither web developers nor backend engineers.
 * The outcome was crappy html code
 --
 
@@ -807,23 +851,23 @@ image::zeplin-measurements.png[]
 
 [NOTE.speaker]
 --
-* Big learning curve. JSF is complex, that's just true. 
+* Huuge learning curve. JSF is complex, that's just true.
 * Loads of boiler plate code for JSP / Servlet approach
 * JSF Its component nature
 ** hide the true nature of the Web, work against the web (not supporting GET in JSF within almost 5 years)
-** hiding Request/Response from the developer is an enormous mistake 
+** hiding Request/Response from the developer is an enormous mistake
 * It's great JSF 2.2 caught up with most of the problems it used to have - *but the web is somewhere else at the moment*
-** I know JSF 2.x is to 1.x like EJB 3.x to 2.x - but still 
+** I know JSF 2.x is to 1.x like EJB 3.x to 2.x - but still
 --
 
-== Solution #1
+== Approach #1
 
 * CDI extension for Stateless MVC framework +
   like Struts
-* Wait few more years for MVC 1.0 + 
+* Wait few more years for MVC 1.0 +
   with some template engine like Thymeleaf or Freemarker or Mustache
 
-== Solution #2
+== Approach #2
 
 *Leave the frontend to web developers*
 
@@ -846,22 +890,22 @@ image::zeplin-measurements.png[]
 === Let them play their toys
 
 [source, json]
--------------------------------------------------------------------------------
+----
   "devDependencies": {
     "bower": "^1"
   }
--------------------------------------------------------------------------------
+----
 
 [source, json]
--------------------------------------------------------------------------------
+----
   "dependencies": {
     "jquery": "1.9.1",
     "backbone": "1.0.0",
     "underscore": "1.4.4"
   }
--------------------------------------------------------------------------------
+----
 
-=== Maven for the rescue 
+=== Maven for the rescue
 
 [%notitle, data-background-image=images/spanish_inquisition.jpg, data-background-size=cover]
 === Spanish Inquisition
@@ -870,7 +914,7 @@ image::zeplin-measurements.png[]
 === frontend-maven-plugin
 
 [source, xml]
--------------------------------------------------------------------------------
+----
 <plugin>
   <groupId>com.github.eirslett</groupId>
   <artifactId>frontend-maven-plugin</artifactId> <!--1-->
@@ -888,15 +932,15 @@ image::zeplin-measurements.png[]
     </execution>
   </executions>
 </plugin>
--------------------------------------------------------------------------------
+----
 
 [%notitle]
 === maven-resources-plugin
 
 
 [source%nowrap, xml]
--------------------------------------------------------------------------------
-<plugin>    
+----
+<plugin>
   <artifactId>maven-resources-plugin</artifactId> <!--2-->
   <version>2.7</version>
   <executions>
@@ -913,14 +957,14 @@ image::zeplin-measurements.png[]
     </execution>
   </executions>
 </plugin>
--------------------------------------------------------------------------------
+----
 
 [%notitle]
 === Output JAR file
 
 
 [source, txt]
--------------------------------------------------------------------------------
+----
 META-INF
 └── resources
     ├── bower_components # <1>
@@ -934,7 +978,7 @@ META-INF
     │   ├── views
     │   └── app.js
     └── index.html # <3>
--------------------------------------------------------------------------------
+----
 <1> Components downloaded by Bower
 <2> Backbone applications
 <3> Main HTMl page
@@ -945,14 +989,14 @@ META-INF
 ** A client-side web library packaged into JAR (Java Archive) file
 * _Servlet 3.0_ specification prescribes way to server static assets from Jar files
 ** the WebJars that are in the `WEB-INF/lib` directory are automatically made available as static resources
-** this works because anything in a `META-INF/resources` directory in a JAR in `WEB-INF/lib` is automatically exposed as a static resource. 
+** this works because anything in a `META-INF/resources` directory in a JAR in `WEB-INF/lib` is automatically exposed as a static resource.
 * The WebJar needs to be a dependency of the application
 
 [%notitle]
 === Maven dependency
 
 [source, xml]
--------------------------------------------------------------------------------
+----
 <dependencies>
     <dependency>
         <groupId>com.example.foo</groupId>
@@ -960,7 +1004,21 @@ META-INF
         <version>1.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
--------------------------------------------------------------------------------
+----
+
+== The 5 TIPS for JavaEE to suck less
+
+[.left]
+icon:check-square-o[] Why this talk?
+
+[.left]
+icon:check-square-o[] *5 tips to make your JavaEE live better*
+
+* Know your stack
+* The Standard won't save you _(aka Your Vendor is your framework)_
+* Limit the boiler plate
+* Go beyond The Standard (not only JPA)
+* Don't be limited to server-side MVC
 
 == Questions?
 
