@@ -7,6 +7,7 @@ RUN /opt/jboss/wildfly/bin/add-user.sh writeuser password1 -a -g app --silent
 
 #Add MySQL Driver
 ADD add_modules.sh /tmp
+# http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar
 ADD mysql-connector-java-5.1.38.jar /tmp/mysql-connector-java.jar
 RUN source /tmp/add_modules.sh
 
