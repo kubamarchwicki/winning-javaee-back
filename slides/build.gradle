@@ -6,13 +6,13 @@ buildscript {
 }
 
 plugins {
-	id 'org.asciidoctor.convert' version '1.5.2'
+	id 'org.asciidoctor.convert' version '1.5.3'
 	id 'com.github.jruby-gradle.base' version '0.1.5'
 }
 
 apply plugin: 'com.github.jruby-gradle.base'
 apply plugin: 'org.asciidoctor.convert'
-apply plugin: 'org.ysb33r.vfs'	
+apply plugin: 'org.ysb33r.vfs'
 
 defaultTasks 'asciidoctor'
 version = '1.0.0-SNAPSHOT'
@@ -54,14 +54,14 @@ download {
 }
 
 asciidoctor {
-	dependsOn download	
+	dependsOn download
 
 	sourceDir = file('src')
 
 	sources {
 		include '*.adoc'
 	}
-	
+
 	resources {
 		from (sourceDir) {
 			include 'css/**'
@@ -69,11 +69,11 @@ asciidoctor {
 		}
 		from (downloadDir) {
 			include 'reveal.js/**'
-		}		
+		}
 	}
 
 	requires = ['tilt']
-	backends = ['revealjs']	
+	backends = ['revealjs']
 
 	options template_dir: new File(templateDir,'templates/slim').absolutePath
 }
