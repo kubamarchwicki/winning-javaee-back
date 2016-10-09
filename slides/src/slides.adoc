@@ -1,8 +1,10 @@
-= JavaEE - nie tak smutna jak się wydaje
+= [line-through]#6# 5 tips for you JavaEE project be less depresing
+// = JavaEE - nie tak smutna jak się wydaje
 Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
 :idprefix: slide_
-:title-slide-background-image: 4dev-background.png
-:title-slide-background-size: cover
+//:title-slide-background-image: 4dev-background.png
+//:title-slide-background-size: cover
+:title-slide-background-color: white
 :icons: font
 :imagesdir: images
 :revealjs_theme: poang
@@ -15,11 +17,7 @@ Jakub Marchwicki <http://github.com/kubamarchwicki[@kubem]>
 :revealjs_height: 720
 :source-highlighter: coderay
 
-[%notitle, data-background-image=images/4dev.jpg, data-background-size=contain]
-== Słowo na niedziele
-
-
-== Does JavaEE have to suck?
+== Does JavaEE have to be so depressing?
 
 [.left]
 icon:square-o[] Why this talk?
@@ -35,34 +33,19 @@ icon:square-o[] 5 tips to make your JavaEE live better
 --
 
 
-[#aboutme, data-background-image=images/chlopaki.jpg, data-background-size=cover]
+[#aboutme]
 == Who am I?
 
-image::chlopaki.jpg[height=580]
-
-////
-image::no-logo.png[width=190, role="logo"]
-image::logo-bns.png[width=190, role="logo"]
-image::logo-symentis.png[width=190, role="logo"]
-
 ....
-* Kind of between the projects
-  Looking for something new to _break_ ;)
+Jakub Marchwicki
+  Twitter: <@kubem>
+  Email: jakub@marchwicki.pl
 
-* Trainer, consultant
-  https://bnsit.pl
-  https://symentis.pl
-
-* Do weird stuff like @dailyfreeebook
-* 10+ years in IT
-* Past 3 years in management
-** Gradually recovering
-
-* I don't claim these ideas perfect
-** They were good enough in context
-** I'm happy to discuss it and ritually dissent them
+Coder, trainer, speaker
+Past life: management, architecture
+  http://jakub.marchwicki.pl
+  Yes, we can work together!
 ....
-////
 
 [NOTE.speaker]
 --
@@ -72,7 +55,7 @@ image::logo-symentis.png[width=190, role="logo"]
 --
 
 [[section_1-intro]]
-== Does JavaEE have to suck?
+== Does JavaEE have to be so depressing?
 
 [.left]
 icon:square-o[] *Why this talk?*
@@ -227,8 +210,8 @@ And now we have two problems
 === This is a real life stack
 
 [%step]
-* WebLogic 12c
-** JavaEE6 compliant (JAXRS 2.0, JPA 2.0, CDI 1.0)
+* WebLogic 12.1.3
+** JavaEE7 compliant (JAXRS 2.0, JPA 2.1, websockets)
 * Spring 3.2.6
 
 [NOTE.speaker]
@@ -251,7 +234,7 @@ And now we have two problems
 --
 
 [[section_2-tips]]
-== Does JavaEE have to suck?
+== Does JavaEE have to be so depressing?
 
 [.left]
 icon:check-square-o[] Why this talk?
@@ -373,6 +356,12 @@ public class HelloListener {
     }
 }
 ----
+
+[NOTE.speaker]
+====
+If you attend tomorrow a session by Ondrej Mihályi about reactive - these exact features are used for JavaEE to pretend to be reactive (and pretend pretty nice - may people gets fooled)
+====
+
 
 == It's kind of OK
 
@@ -539,7 +528,9 @@ So we have a standard but still we are not there yet
 ** And treat it as a single vendor
 * And that way our JavaEE is becoming like Spring - not being Spring
 * So we don't have much advantage from "following the standard"
-** But we loose a lot in terms of the Spring *fanciness* and *flexibility*
+* But we loose a lot in terms of the Spring *fanciness* and *flexibility*
+
+{zwsp}
 
 *Just accept it and move forward*
 --
@@ -862,10 +853,49 @@ image::zeplin-measurements.png[]
 
 == Approach #1
 
-* CDI extension for Stateless MVC framework +
-  like Struts
-* Wait few more years for MVC 1.0 +
-  with some template engine like Thymeleaf or Freemarker or Mustache
+Try JavaEE8 MVC 1.0 _(Ozark)_
+
+[details]#with some template engine like Thymeleaf or Freemarker or Mustache#
+
+== Approach #1
+
+[line-through]#Try JavaEE8 MVC 1.0 _(Orazk)_#
+
+[.details.line-through]#with some template engine like Thymeleaf or Freemarker or Mustache#
+
+== Approach #1
+
+CDI extension for Stateless MVC framework
+
+[details]#hack Struts2 with JavaEE#
+
+[NOTE.speaker]
+====
+Why hack
+
+* it does not integrate smoothly, you cannot simple inject your service into struts actions  without *InitialContext* and _lookups_
+====
+
+
+== Approach #1
+
+Maybe JSF 2.3 will bring any good
+
+[quote, role="small"]
+(...) more as the default MVC framework in Java EE and less as an out of the box standalone MVC framework for Tomcat. Examples are ditching its own managed bean model, its own DI system, and its own expression language.
+
+== Approach #1
+
+[line-through]#Try JavaEE8 MVC 1.0 _(Orazk)_#
+
+[line-through]#CDI extension for Stateless MVC framework#
+
+[line-through]#Maybe JSF 2.3 will bring any good#
+
+[NOTE.speaker]
+====
+Non of those are my go-to choices. But it can be just me
+====
 
 == Approach #2
 
@@ -875,9 +905,11 @@ image::zeplin-measurements.png[]
 
 === Modern frontend stack
 
-* NodeJS + NPM
-* Bower
-* Some other build tools
+NodeJS + NPM
+
+Bower
+
+Some other build tools
 
 [NOTE.speaker]
 --
@@ -1006,7 +1038,7 @@ META-INF
 </dependencies>
 ----
 
-== The 5 TIPS for JavaEE to suck less
+== The 5 TIPS for JavaEE to be less depressing
 
 [.left]
 icon:check-square-o[] Why this talk?
@@ -1020,6 +1052,16 @@ icon:check-square-o[] *5 tips to make your JavaEE live better*
 * Go beyond The Standard (not only JPA)
 * Don't be limited to server-side MVC
 
+[NOTE.speaker]
+====
+* Latest JavaEE
+* Take advantage of your server
+* With tools like DeltaSpike
+* jOOQ, jDBI
+* NPM, modern MVC
+====
+
+
 == Questions?
 
 [NOTE.speaker]
@@ -1031,10 +1073,9 @@ icon:check-square-o[] *5 tips to make your JavaEE live better*
 == Links & Goodies
 
 ....
-http://speakerdeck.com/kubamarchwicki/winning-javavee-back
-
 Follow me on twitter
-  @kubem
+  Twitter: <@kubem>
+  Email: jakub@marchwicki.pl
 
 Want a free ebook from Packt - visit @dailyfreeebook
 
